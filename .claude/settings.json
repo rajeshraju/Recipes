@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(psql:*)",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/psql.exe\" -U postgres -c \"SELECT version\\(\\);\")",
+      "Bash(for pass in postgres password 1234 admin \"\" root secret)",
+      "Bash(do PGPASSWORD=\"$pass\" \"/c/Program Files/PostgreSQL/18/bin/psql.exe\" -U postgres -c \"SELECT 1;\")",
+      "Bash(echo:*)",
+      "Bash(break)",
+      "Bash(done)",
+      "Bash(PGPASSWORD=postgres \"/c/Program Files/PostgreSQL/18/bin/psql.exe\":*)",
+      "Bash(PGPASSWORD=\"\" \"/c/Program Files/PostgreSQL/18/bin/psql.exe\":*)",
+      "Bash(PGPASSWORD=\"123456\" \"/c/Program Files/PostgreSQL/18/bin/psql.exe\":*)",
+      "Bash(PGPASSWORD=\"password123\" \"/c/Program Files/PostgreSQL/18/bin/psql.exe\":*)",
+      "Read(//c/Program Files/PostgreSQL/18/data/**)",
+      "Bash(net stop:*)",
+      "Bash(net start:*)",
+      "Bash(sc stop:*)",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/psql.exe\" -U postgres -h 127.0.0.1 -c \"ALTER USER postgres WITH PASSWORD ''recipes2024'';\")",
+      "Bash(\"/c/Program Files/PostgreSQL/18/bin/psql.exe\" -U postgres -h 127.0.0.1 -c \"CREATE DATABASE recipes_db;\")",
+      "Bash(PGPASSWORD=recipes2024 \"/c/Program Files/PostgreSQL/18/bin/psql.exe\":*)",
+      "Bash(npx shadcn@latest init:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npx tsc:*)",
+      "Bash(curl:*)",
+      "Bash(taskkill:*)",
+      "Bash(wmic process:*)",
+      "Read(//c/Projects/Repos/Recipes/**)",
+      "Read(//c/Projects/Repos/Recipes/.next/dev/logs/**)",
+      "Bash(find:*)",
+      "Bash(powershell -Command \"Get-Process node | Where-Object { $_.CommandLine -like ''*Git*Recipes*'' } | Stop-Process -Force\")",
+      "Bash(powershell -Command \"Get-Process node | Where-Object { $_.MainWindowTitle -like ''*Git*Recipes*'' } | Stop-Process -Force\")",
+      "Bash(for pid in 20112 24828 26172 18284 20588 19496 18488 16904 36168 11240)",
+      "Bash(do taskkill /PID $pid /F)",
+      "Read(//c/Projects/Git/Recipes/**)",
+      "Bash(powershell.exe -Command \"20112,24828,26172,18284,20588,19496 | ForEach-Object { try { Stop-Process -Id $_ -Force; Write-Host \"\"Killed $_\"\" } catch { Write-Host \"\"Failed $_: $_\"\" } }\")",
+      "Bash(powershell.exe -Command \"Stop-Process -Id 20112,24828,26172,18284,20588,19496 -Force -ErrorAction SilentlyContinue; Write-Host done\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Program Files\\PostgreSQL\\18\\data",
+      "C:\\Projects\\Repos\\Recipes\\src\\app\\api\\auth",
+      "C:\\Projects\\Repos\\Recipes\\src\\app\\(app)\\recipes\\[id]",
+      "C:\\Projects\\Repos\\recipe-app-temp",
+      "C:\\Users\\Admin\\.claude\\projects\\c--Projects-Repos-Recipes\\memory",
+      "c:\\Projects\\Git\\Recipes\\.next"
+    ]
+  }
+}

@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+// ─── Auth (NextAuth / @auth/prisma-adapter required tables) ──────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(VIEWER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  recipes  Recipe[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─── Recipes ─────────────────────────────────────────────────────────────────
+
+model Recipe {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  imagePath   String?
+  servings    Int?
+  prepTime    Int?
+  cookTime    Int?
+  authorId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author      User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  ingredients Ingredient[]
+  steps       Step[]
+  categories  RecipeCategory[]
+
+  @@index([authorId])
+  @@map("recipes")
+}
+
+model Ingredient {
+  id       String  @id @default(cuid())
+  recipeId String
+  order    Int
+  name     String
+  amount   String
+  unit     String?
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@index([recipeId])
+  @@map("ingredients")
+}
+
+model Step {
+  id          String @id @default(cuid())
+  recipeId    String
+  stepNumber  Int
+  instruction String @db.Text
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@index([recipeId])
+  @@map("steps")
+}
+
+// ─── Categories ──────────────────────────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  recipes RecipeCategory[]
+
+  @@map("categories")
+}
+
+model RecipeCategory {
+  recipeId   String
+  categoryId String
+
+  recipe   Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([recipeId, categoryId])
+  @@map("recipe_categories")
+}
